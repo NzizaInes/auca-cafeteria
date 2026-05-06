@@ -10,8 +10,9 @@
 <div class="login-page">
     <div class="login-card">
         <div class="login-logo">
-            <h1>🍽️ AUCA Cafeteria</h1>
+            <h1>AUCA CAFETERIA</h1>
             <p>Queue Management System</p>
+            <div class="login-divider"></div>
         </div>
 
         <div th:if="${errorMessage}" class="alert alert-danger"
@@ -24,7 +25,7 @@
                 <label class="form-label" for="email">Email Address</label>
                 <input type="email" id="email" name="email"
                        class="form-control"
-                       placeholder="Enter your email"
+                       placeholder="Enter your institutional email"
                        required autofocus/>
             </div>
             <div class="form-group">
@@ -34,18 +35,11 @@
                        placeholder="Enter your password"
                        required/>
             </div>
-            <button type="submit" class="btn btn-primary btn-block">
-                Login
+            <button type="submit" class="btn btn-primary btn-block"
+                    style="margin-top:8px;">
+                Sign In
             </button>
         </form>
-
-        <div class="alert alert-info" style="margin-top:20px; font-size:12px;">
-            <strong>Demo Accounts:</strong><br/>
-            student@auca.ac.rw / password123<br/>
-            kitchen@auca.ac.rw / password123<br/>
-            cashier@auca.ac.rw / password123<br/>
-            admin@auca.ac.rw / admin123
-        </div>
     </div>
 </div>
 </body>

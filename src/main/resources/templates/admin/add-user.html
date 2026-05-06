@@ -11,37 +11,34 @@
 </head>
 <body>
 <nav class="navbar">
-    <a class="navbar-brand" href="#">🍽️ AUCA <span>Cafeteria</span></a>
+    <div>
+        <a class="navbar-brand" href="#">AUCA <span>Cafeteria</span></a>
+        <div class="navbar-subtitle">Queue Management System</div>
+    </div>
     <div class="navbar-user">
-        <span>⚙️ Admin</span>
+        <span>Admin Portal</span>
         <form th:action="@{/logout}" method="post" style="display:inline;">
-            <input type="hidden" th:name="${_csrf.parameterName}"
-                   th:value="${_csrf.token}"/>
-            <button type="submit"
-                    style="background:none;border:none;color:white;
-                           cursor:pointer;font-size:13px;">Logout</button>
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+            <button type="submit">Sign Out</button>
         </form>
     </div>
 </nav>
 <div class="layout">
     <aside class="sidebar">
-        <div class="sidebar-header">Admin Panel</div>
-        <a th:href="@{/admin/dashboard}">📊 Dashboard</a>
-        <a th:href="@{/admin/menu}">🍱 Manage Menu</a>
-        <a th:href="@{/admin/users}" class="active">👥 Manage Users</a>
-        <a th:href="@{/admin/reports}">📈 Reports</a>
+        <div class="sidebar-header">Navigation</div>
+        <a th:href="@{/admin/dashboard}">Dashboard</a>
+        <a th:href="@{/admin/menu}">Manage Menu</a>
+        <a th:href="@{/admin/users}" class="active">Manage Users</a>
+        <a th:href="@{/admin/reports}">Reports</a>
         <form th:action="@{/logout}" method="post" style="margin:0;padding:0;">
-            <input type="hidden" th:name="${_csrf.parameterName}"
-                   th:value="${_csrf.token}"/>
-            <button type="submit"
-                    style="background:none;border:none;
-                           color:rgba(255,255,255,0.75);cursor:pointer;
-                           font-size:13px;padding:12px 24px;
-                           width:100%;text-align:left;">🚪 Logout</button>
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+            <button type="submit" style="background:none;border:none;color:rgba(255,255,255,0.7);
+                    cursor:pointer;font-size:13px;padding:11px 24px;width:100%;
+                    text-align:left;border-left:3px solid transparent;">Sign Out</button>
         </form>
     </aside>
     <main class="main-content">
-        <h1 class="page-title">Add New User ➕</h1>
+        <h1 class="page-title">Add New User</h1>
 
         <div class="card">
             <div class="card-title">User Details</div>
@@ -50,93 +47,71 @@
                 <input type="hidden" th:name="${_csrf.parameterName}"
                        th:value="${_csrf.token}"/>
 
-                <!-- Common Fields -->
-                <div style="display:grid;
-                            grid-template-columns:1fr 1fr;
-                            gap:16px;">
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
                     <div class="form-group">
                         <label class="form-label">
                             Full Name <span style="color:var(--danger)">*</span>
                         </label>
-                        <input type="text" name="name"
-                               class="form-control"
-                               placeholder="e.g. UWAYO Nziza Ines"
-                               required/>
+                        <input type="text" name="name" class="form-control"
+                               placeholder="e.g. UWAYO Nziza Ines" required/>
                     </div>
                     <div class="form-group">
                         <label class="form-label">
                             Email Address <span style="color:var(--danger)">*</span>
                         </label>
-                        <input type="email" name="email"
-                               class="form-control"
-                               placeholder="e.g. ines@auca.ac.rw"
-                               required/>
+                        <input type="email" name="email" class="form-control"
+                               placeholder="e.g. ines@auca.ac.rw" required/>
                     </div>
                     <div class="form-group">
                         <label class="form-label">
                             Password <span style="color:var(--danger)">*</span>
                         </label>
-                        <input type="password" name="password"
-                               class="form-control"
-                               placeholder="Enter password"
-                               required/>
+                        <input type="password" name="password" class="form-control"
+                               placeholder="Enter password" required/>
                     </div>
                     <div class="form-group">
                         <label class="form-label">
                             Role <span style="color:var(--danger)">*</span>
                         </label>
-                        <select name="role" id="roleSelect"
-                                class="form-control"
-                                onchange="showRoleFields(this.value)"
-                                required>
+                        <select name="role" id="roleSelect" class="form-control"
+                                onchange="showRoleFields(this.value)" required>
                             <option value="">-- Select Role --</option>
-                            <option value="STUDENT">👤 Student</option>
-                            <option value="KITCHEN_STAFF">
-                                👨‍🍳 Kitchen Staff
-                            </option>
-                            <option value="CASHIER">💳 Cashier</option>
-                            <option value="ADMIN">⚙️ Admin</option>
+                            <option value="STUDENT">Student</option>
+                            <option value="KITCHEN_STAFF">Kitchen Staff</option>
+                            <option value="CASHIER">Cashier</option>
+                            <option value="ADMIN">Admin</option>
                         </select>
                     </div>
                 </div>
 
-                <!-- Student Fields -->
                 <div class="role-fields" id="fields-STUDENT">
                     <hr style="margin:16px 0;"/>
                     <div class="card-title" style="margin-bottom:12px;">
                         Student Details
                     </div>
-                    <div style="display:grid;
-                                grid-template-columns:1fr 1fr;
-                                gap:16px;">
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
                         <div class="form-group">
                             <label class="form-label">Student ID</label>
-                            <input type="text" name="studentId"
-                                   class="form-control"
-                                   placeholder="e.g. S2024001"/>
+                            <input type="text" name="studentId" class="form-control"
+                                   placeholder="e.g. 27902"/>
                         </div>
                         <div class="form-group">
                             <label class="form-label">Faculty</label>
-                            <input type="text" name="faculty"
-                                   class="form-control"
+                            <input type="text" name="faculty" class="form-control"
                                    placeholder="e.g. Information Technology"/>
                         </div>
                     </div>
                 </div>
 
-                <!-- Kitchen Staff Fields -->
                 <div class="role-fields" id="fields-KITCHEN_STAFF">
                     <hr style="margin:16px 0;"/>
                     <div class="card-title" style="margin-bottom:12px;">
                         Kitchen Staff Details
                     </div>
-                    <div style="display:grid;
-                                grid-template-columns:1fr 1fr;
-                                gap:16px;">
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
                         <div class="form-group">
                             <label class="form-label">Staff ID</label>
-                            <input type="text" name="staffId"
-                                   class="form-control"
+                            <input type="text" name="staffId" class="form-control"
                                    placeholder="e.g. K001"/>
                         </div>
                         <div class="form-group">
@@ -151,19 +126,15 @@
                     </div>
                 </div>
 
-                <!-- Cashier Fields -->
                 <div class="role-fields" id="fields-CASHIER">
                     <hr style="margin:16px 0;"/>
                     <div class="card-title" style="margin-bottom:12px;">
                         Cashier Details
                     </div>
-                    <div style="display:grid;
-                                grid-template-columns:1fr 1fr;
-                                gap:16px;">
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
                         <div class="form-group">
                             <label class="form-label">Cashier ID</label>
-                            <input type="text" name="cashierId"
-                                   class="form-control"
+                            <input type="text" name="cashierId" class="form-control"
                                    placeholder="e.g. C001"/>
                         </div>
                         <div class="form-group">
@@ -178,7 +149,6 @@
                     </div>
                 </div>
 
-                <!-- Admin Fields -->
                 <div class="role-fields" id="fields-ADMIN">
                     <hr style="margin:16px 0;"/>
                     <div class="card-title" style="margin-bottom:12px;">
@@ -186,21 +156,18 @@
                     </div>
                     <div class="form-group">
                         <label class="form-label">Department</label>
-                        <input type="text" name="department"
-                               class="form-control"
+                        <input type="text" name="department" class="form-control"
                                placeholder="e.g. Cafeteria Management"
                                style="max-width:400px;"/>
                     </div>
                 </div>
 
-                <!-- Buttons -->
                 <div style="display:flex;gap:12px;margin-top:24px;">
-                    <a th:href="@{/admin/users}"
-                       class="btn btn-danger">
-                        ✕ Cancel
+                    <a th:href="@{/admin/users}" class="btn btn-danger">
+                        Cancel
                     </a>
                     <button type="submit" class="btn btn-primary">
-                        💾 Save User
+                        Save User
                     </button>
                 </div>
             </form>
@@ -210,12 +177,9 @@
 
 <script>
     function showRoleFields(role) {
-        // Hide all role fields
         document.querySelectorAll('.role-fields').forEach(function(el) {
             el.classList.remove('active');
         });
-
-        // Show selected role fields
         if (role) {
             var fields = document.getElementById('fields-' + role);
             if (fields) fields.classList.add('active');

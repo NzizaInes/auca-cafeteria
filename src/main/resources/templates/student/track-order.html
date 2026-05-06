@@ -7,50 +7,53 @@
 </head>
 <body>
 <nav class="navbar">
-    <a class="navbar-brand" href="#">🍽️ AUCA <span>Cafeteria</span></a>
+    <div>
+        <a class="navbar-brand" href="#">AUCA <span>Cafeteria</span></a>
+        <div class="navbar-subtitle">Queue Management System</div>
+    </div>
     <div class="navbar-user">
-        <span>👤 Student</span>
+        <span>Student Portal</span>
         <form th:action="@{/logout}" method="post" style="display:inline;">
             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
-            <button type="submit" style="background:none;border:none;color:white;cursor:pointer;font-size:13px;">Logout</button>
+            <button type="submit">Sign Out</button>
         </form>
     </div>
 </nav>
 <div class="layout">
     <aside class="sidebar">
-        <div class="sidebar-header">Student Menu</div>
-        <a th:href="@{/student/dashboard}">🏠 Dashboard</a>
-        <a th:href="@{/student/menu}">🍱 Browse Menu</a>
-        <a th:href="@{/student/order/track}" class="active">📍 Track Order</a>
+        <div class="sidebar-header">Navigation</div>
+        <a th:href="@{/student/dashboard}">Dashboard</a>
+        <a th:href="@{/student/menu}">Browse Menu</a>
+        <a th:href="@{/student/order/track}" class="active">Track Order</a>
         <form th:action="@{/logout}" method="post" style="margin:0;padding:0;">
             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
-            <button type="submit" style="background:none;border:none;color:rgba(255,255,255,0.75);cursor:pointer;font-size:13px;padding:12px 24px;width:100%;text-align:left;">🚪 Logout</button>
+            <button type="submit" style="background:none;border:none;color:rgba(255,255,255,0.7);
+                    cursor:pointer;font-size:13px;padding:11px 24px;width:100%;
+                    text-align:left;border-left:3px solid transparent;">Sign Out</button>
         </form>
     </aside>
     <main class="main-content">
-        <h1 class="page-title">Track Your Order 📍</h1>
+        <h1 class="page-title">Track Your Order</h1>
 
-        <!-- Current Queue Status -->
-        <div class="queue-number-display">
-            <div class="queue-label">Your Current Queue Number</div>
-            <div class="queue-number"
-                 th:text="${#lists.isEmpty(orders)} ? 'No Orders' : 'Q-' + ${orders[0].queueNumber}">
-                Q-00
-            </div>
-            <div class="queue-label"
-                 th:text="${#lists.isEmpty(orders)} ? '' : 'Estimated wait: ~' + ${orders[0].queueNumber * 5} + ' minutes'">
-                Estimated wait
+        <div th:if="${!#lists.isEmpty(orders)}">
+            <div class="queue-number-display">
+                <div class="queue-label">Your Current Queue Number</div>
+                <div class="queue-number"
+                     th:text="'Q-' + ${orders[0].queueNumber}">Q-0</div>
+                <div class="queue-label"
+                     th:text="'Estimated wait: approximately ' + ${orders[0].queueNumber * 5} + ' minutes'">
+                    Estimated wait
+                </div>
             </div>
         </div>
 
-        <!-- Order Status Timeline -->
         <div class="card">
             <div class="card-title">Order Status</div>
             <table class="table">
                 <thead>
                 <tr>
-                    <th>Order #</th>
-                    <th>Items</th>
+                    <th>#</th>
+                    <th>Items Ordered</th>
                     <th>Total</th>
                     <th>Queue No.</th>
                     <th>Status</th>
@@ -58,83 +61,117 @@
                 </thead>
                 <tbody>
                 <tr th:each="order,s : ${orders}">
-                    <td th:text="'#' + ${s.count}">#1</td>
+                    <td th:text="${s.count}">1</td>
                     <td>
-            <span th:each="item,iter : ${order.items}">
-                <span th:text="${item.name}">Item</span>
-                <span th:unless="${iter.last}">, </span>
-            </span>
+                            <span th:each="item,iter : ${order.items}">
+                                <span th:text="${item.name}">Item</span>
+                                <span th:unless="${iter.last}">, </span>
+                            </span>
                     </td>
-                    <td th:text="${order.totalPrice} + ' RWF'">800 RWF</td>
-                    <td><strong th:text="'Q-' + ${order.queueNumber}">Q-12</strong></td>
+                    <td th:text="${order.totalPrice} + ' RWF'">0 RWF</td>
+                    <td><strong th:text="'Q-' + ${order.queueNumber}">Q-0</strong></td>
                     <td>
-            <span th:class="'badge badge-'
-                  + ${order.status.toString().toLowerCase()}"
-                  th:text="${order.status}">Status</span>
+                            <span th:class="'badge badge-' + ${order.status.toString().toLowerCase()}"
+                                  th:text="${order.status}">Status</span>
                     </td>
                 </tr>
                 <tr th:if="${#lists.isEmpty(orders)}">
                     <td colspan="5"
                         style="text-align:center;color:var(--text-muted);padding:32px;">
-                        No orders yet. Browse the menu to place your first order!
+                        No orders yet. Browse the menu to place your first order.
                     </td>
                 </tr>
                 </tbody>
             </table>
         </div>
 
-        <!-- Status Steps -->
         <div class="card">
             <div class="card-title">Order Progress</div>
-            <div style="display:flex; justify-content:space-between; padding:20px 0;">
+            <div style="display:flex;justify-content:space-between;padding:20px 0;">
 
-                <!-- Step 1: Order Placed -->
-                <div style="text-align:center; flex:1;">
-                    <div style="width:40px;height:40px;border-radius:50%;background:var(--success);color:white;display:flex;align-items:center;justify-content:center;margin:0 auto 8px;font-size:18px;">✅</div>
+                <div style="text-align:center;flex:1;">
+                    <div style="width:40px;height:40px;border-radius:50%;
+                                background:var(--success);color:white;
+                                display:flex;align-items:center;justify-content:center;
+                                margin:0 auto 8px;font-weight:700;">1</div>
                     <div style="font-size:12px;font-weight:600;">Order Placed</div>
                 </div>
 
-                <!-- Line 1 -->
                 <div style="flex:1;display:flex;align-items:center;">
-                    <div th:style="${!#lists.isEmpty(orders) and (orders[0].status.name() == 'PAID' or orders[0].status.name() == 'PREPARING' or orders[0].status.name() == 'READY' or orders[0].status.name() == 'COMPLETED')} ? 'height:2px;background:var(--success);width:100%;' : 'height:2px;background:var(--border);width:100%;'"></div>
+                    <div th:style="${!#lists.isEmpty(orders) and
+                        (orders[0].status.name() == 'PAID' or
+                         orders[0].status.name() == 'PREPARING' or
+                         orders[0].status.name() == 'READY' or
+                         orders[0].status.name() == 'COMPLETED')}
+                        ? 'height:2px;background:var(--success);width:100%;'
+                        : 'height:2px;background:var(--border);width:100%;'">
+                    </div>
                 </div>
 
-                <!-- Step 2: Payment Confirmed -->
-                <div style="text-align:center; flex:1;">
-                    <div th:style="${!#lists.isEmpty(orders) and (orders[0].status.name() == 'PAID' or orders[0].status.name() == 'PREPARING' or orders[0].status.name() == 'READY' or orders[0].status.name() == 'COMPLETED')} ? 'width:40px;height:40px;border-radius:50%;background:var(--success);color:white;display:flex;align-items:center;justify-content:center;margin:0 auto 8px;font-size:18px;' : 'width:40px;height:40px;border-radius:50%;background:var(--border);color:white;display:flex;align-items:center;justify-content:center;margin:0 auto 8px;font-size:18px;'">✅</div>
+                <div style="text-align:center;flex:1;">
+                    <div th:style="${!#lists.isEmpty(orders) and
+                        (orders[0].status.name() == 'PAID' or
+                         orders[0].status.name() == 'PREPARING' or
+                         orders[0].status.name() == 'READY' or
+                         orders[0].status.name() == 'COMPLETED')}
+                        ? 'width:40px;height:40px;border-radius:50%;background:var(--success);color:white;display:flex;align-items:center;justify-content:center;margin:0 auto 8px;font-weight:700;'
+                        : 'width:40px;height:40px;border-radius:50%;background:var(--border);color:white;display:flex;align-items:center;justify-content:center;margin:0 auto 8px;font-weight:700;'">
+                        2
+                    </div>
                     <div style="font-size:12px;font-weight:600;">Payment Confirmed</div>
                 </div>
 
-                <!-- Line 2 -->
                 <div style="flex:1;display:flex;align-items:center;">
-                    <div th:style="${!#lists.isEmpty(orders) and (orders[0].status.name() == 'PREPARING' or orders[0].status.name() == 'READY' or orders[0].status.name() == 'COMPLETED')} ? 'height:2px;background:var(--warning);width:100%;' : 'height:2px;background:var(--border);width:100%;'"></div>
+                    <div th:style="${!#lists.isEmpty(orders) and
+                        (orders[0].status.name() == 'PREPARING' or
+                         orders[0].status.name() == 'READY' or
+                         orders[0].status.name() == 'COMPLETED')}
+                        ? 'height:2px;background:var(--warning);width:100%;'
+                        : 'height:2px;background:var(--border);width:100%;'">
+                    </div>
                 </div>
 
-                <!-- Step 3: Preparing -->
-                <div style="text-align:center; flex:1;">
-                    <div th:style="${!#lists.isEmpty(orders) and (orders[0].status.name() == 'PREPARING' or orders[0].status.name() == 'READY' or orders[0].status.name() == 'COMPLETED')} ? 'width:40px;height:40px;border-radius:50%;background:var(--warning);color:white;display:flex;align-items:center;justify-content:center;margin:0 auto 8px;font-size:18px;' : 'width:40px;height:40px;border-radius:50%;background:var(--border);color:white;display:flex;align-items:center;justify-content:center;margin:0 auto 8px;font-size:18px;'">🍳</div>
+                <div style="text-align:center;flex:1;">
+                    <div th:style="${!#lists.isEmpty(orders) and
+                        (orders[0].status.name() == 'PREPARING' or
+                         orders[0].status.name() == 'READY' or
+                         orders[0].status.name() == 'COMPLETED')}
+                        ? 'width:40px;height:40px;border-radius:50%;background:var(--warning);color:white;display:flex;align-items:center;justify-content:center;margin:0 auto 8px;font-weight:700;'
+                        : 'width:40px;height:40px;border-radius:50%;background:var(--border);color:white;display:flex;align-items:center;justify-content:center;margin:0 auto 8px;font-weight:700;'">
+                        3
+                    </div>
                     <div style="font-size:12px;font-weight:600;">Preparing</div>
                 </div>
 
-                <!-- Line 3 -->
                 <div style="flex:1;display:flex;align-items:center;">
-                    <div th:style="${!#lists.isEmpty(orders) and (orders[0].status.name() == 'READY' or orders[0].status.name() == 'COMPLETED')} ? 'height:2px;background:var(--success);width:100%;' : 'height:2px;background:var(--border);width:100%;'"></div>
+                    <div th:style="${!#lists.isEmpty(orders) and
+                        (orders[0].status.name() == 'READY' or
+                         orders[0].status.name() == 'COMPLETED')}
+                        ? 'height:2px;background:var(--success);width:100%;'
+                        : 'height:2px;background:var(--border);width:100%;'">
+                    </div>
                 </div>
 
-                <!-- Step 4: Ready -->
-                <div style="text-align:center; flex:1;">
-                    <div th:style="${!#lists.isEmpty(orders) and (orders[0].status.name() == 'READY' or orders[0].status.name() == 'COMPLETED')} ? 'width:40px;height:40px;border-radius:50%;background:var(--success);color:white;display:flex;align-items:center;justify-content:center;margin:0 auto 8px;font-size:18px;' : 'width:40px;height:40px;border-radius:50%;background:var(--border);color:white;display:flex;align-items:center;justify-content:center;margin:0 auto 8px;font-size:18px;'">🍽️</div>
+                <div style="text-align:center;flex:1;">
+                    <div th:style="${!#lists.isEmpty(orders) and
+                        (orders[0].status.name() == 'READY' or
+                         orders[0].status.name() == 'COMPLETED')}
+                        ? 'width:40px;height:40px;border-radius:50%;background:var(--success);color:white;display:flex;align-items:center;justify-content:center;margin:0 auto 8px;font-weight:700;'
+                        : 'width:40px;height:40px;border-radius:50%;background:var(--border);color:white;display:flex;align-items:center;justify-content:center;margin:0 auto 8px;font-weight:700;'">
+                        4
+                    </div>
                     <div style="font-size:12px;font-weight:600;">Ready</div>
                 </div>
+
             </div>
         </div>
 
         <div class="alert alert-info">
-            📱 You will be notified automatically when your meal is ready for collection!
+            You will be notified automatically when your meal is ready for collection.
         </div>
 
         <a th:href="@{/student/dashboard}" class="btn btn-primary">
-            🏠 Back to Dashboard
+            Back to Dashboard
         </a>
     </main>
 </div>

@@ -7,31 +7,35 @@
 </head>
 <body>
 <nav class="navbar">
-    <a class="navbar-brand" href="#">🍽️ AUCA <span>Cafeteria</span></a>
+    <div>
+        <a class="navbar-brand" href="#">AUCA <span>Cafeteria</span></a>
+        <div class="navbar-subtitle">Queue Management System</div>
+    </div>
     <div class="navbar-user">
-        <span>💳 Cashier</span>
+        <span>Cashier Portal</span>
         <form th:action="@{/logout}" method="post" style="display:inline;">
             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
-            <button type="submit" style="background:none;border:none;color:white;cursor:pointer;font-size:13px;">Logout</button>
+            <button type="submit">Sign Out</button>
         </form>
     </div>
 </nav>
 <div class="layout">
     <aside class="sidebar">
-        <div class="sidebar-header">Cashier Menu</div>
-        <a th:href="@{/cashier/dashboard}" class="active">💳 Pending Payments</a>
-        <a th:href="@{/cashier/confirmed}">✅ Confirmed Payments</a>
+        <div class="sidebar-header">Navigation</div>
+        <a th:href="@{/cashier/dashboard}" class="active">Pending Payments</a>
+        <a th:href="@{/cashier/confirmed}">Payment History</a>
         <form th:action="@{/logout}" method="post" style="margin:0;padding:0;">
             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
-            <button type="submit" style="background:none;border:none;color:rgba(255,255,255,0.75);cursor:pointer;font-size:13px;padding:12px 24px;width:100%;text-align:left;">🚪 Logout</button>
+            <button type="submit" style="background:none;border:none;color:rgba(255,255,255,0.7);
+                    cursor:pointer;font-size:13px;padding:11px 24px;width:100%;
+                    text-align:left;border-left:3px solid transparent;">Sign Out</button>
         </form>
     </aside>
     <main class="main-content">
-        <h1 class="page-title">Payment Queue 💳</h1>
+        <h1 class="page-title">Payment Queue</h1>
 
-        <!-- Pending Payments -->
         <div class="card">
-            <div class="card-title">⏳ Pending Payments</div>
+            <div class="card-title">Pending Payments</div>
             <table class="table">
                 <thead>
                 <tr>
@@ -40,7 +44,7 @@
                     <th>Student</th>
                     <th>Amount</th>
                     <th>Payment Method</th>
-                    <th>Payment Reference / Proof</th>
+                    <th>Payment Reference</th>
                     <th>Action</th>
                 </tr>
                 </thead>
@@ -51,36 +55,37 @@
                     <td th:text="${order.student.name}">Student</td>
                     <td th:text="${order.totalPrice} + ' RWF'">1500</td>
                     <td>
-                        <!-- Payment Method Badge -->
-                        <span th:if="${order.paymentMethod == 'CASH'}"
-                              class="badge badge-pending">💵 Cash</span>
+                            <span th:if="${order.paymentMethod == 'CASH'}"
+                                  class="badge badge-pending">Cash</span>
                         <span th:if="${order.paymentMethod == 'MOBILE_MONEY'}"
-                              class="badge badge-preparing">📱 MoMo</span>
+                              class="badge badge-preparing">Mobile Money</span>
                         <span th:if="${order.paymentMethod == 'BANK_CARD'}"
-                              class="badge badge-paid">💳 Card</span>
+                              class="badge badge-paid">Bank Card</span>
                         <span th:if="${order.paymentMethod == null}"
-                              class="badge badge-cancelled">Not selected</span>
+                              class="badge badge-cancelled">Not Selected</span>
                     </td>
                     <td>
-                        <!-- Payment Reference / Proof -->
-                        <span th:if="${order.paymentReference != null}"
-                              th:text="${order.paymentReference}"
-                              style="font-family:monospace;font-size:12px;">
+                            <span th:if="${order.paymentReference != null
+                                          and order.paymentReference != ':'
+                                          and !order.paymentReference.isEmpty()}"
+                                  th:text="${order.paymentReference}"
+                                  style="font-family:monospace;font-size:12px;">
                                 Reference
                             </span>
-                        <span th:if="${order.paymentReference == null}"
+                        <span th:unless="${order.paymentReference != null
+                                              and order.paymentReference != ':'
+                                              and !order.paymentReference.isEmpty()}"
                               style="color:var(--text-muted);font-size:12px;">
-                                No reference yet
+                                N/A
                             </span>
                     </td>
                     <td>
                         <form th:action="@{/cashier/order/{id}/confirm(id=${order.id})}"
                               method="post">
-                            <input type="hidden"
-                                   th:name="${_csrf.parameterName}"
+                            <input type="hidden" th:name="${_csrf.parameterName}"
                                    th:value="${_csrf.token}"/>
                             <button type="submit" class="btn btn-success btn-sm">
-                                ✅ Confirm
+                                Confirm Payment
                             </button>
                         </form>
                     </td>
@@ -88,7 +93,7 @@
                 <tr th:if="${#lists.isEmpty(orders)}">
                     <td colspan="7"
                         style="text-align:center;color:var(--text-muted);padding:32px;">
-                        No pending payments right now. ✅
+                        No pending payments at this time.
                     </td>
                 </tr>
                 </tbody>

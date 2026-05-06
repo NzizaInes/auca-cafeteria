@@ -7,31 +7,35 @@
 </head>
 <body>
 <nav class="navbar">
-    <a class="navbar-brand" href="#">🍽️ AUCA <span>Cafeteria</span></a>
+    <div>
+        <a class="navbar-brand" href="#">AUCA <span>Cafeteria</span></a>
+        <div class="navbar-subtitle">Queue Management System</div>
+    </div>
     <div class="navbar-user">
-        <span>⚙️ Admin</span>
+        <span>Admin Portal</span>
         <form th:action="@{/logout}" method="post" style="display:inline;">
             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
-            <button type="submit" style="background:none;border:none;color:white;cursor:pointer;font-size:13px;">Logout</button>
+            <button type="submit">Sign Out</button>
         </form>
     </div>
 </nav>
 <div class="layout">
     <aside class="sidebar">
-        <div class="sidebar-header">Admin Panel</div>
-        <a th:href="@{/admin/dashboard}">📊 Dashboard</a>
-        <a th:href="@{/admin/menu}">🍱 Manage Menu</a>
-        <a th:href="@{/admin/users}">👥 Manage Users</a>
-        <a th:href="@{/admin/reports}" class="active">📈 Reports</a>
+        <div class="sidebar-header">Navigation</div>
+        <a th:href="@{/admin/dashboard}">Dashboard</a>
+        <a th:href="@{/admin/menu}">Manage Menu</a>
+        <a th:href="@{/admin/users}">Manage Users</a>
+        <a th:href="@{/admin/reports}" class="active">Reports</a>
         <form th:action="@{/logout}" method="post" style="margin:0;padding:0;">
             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
-            <button type="submit" style="background:none;border:none;color:rgba(255,255,255,0.75);cursor:pointer;font-size:13px;padding:12px 24px;width:100%;text-align:left;">🚪 Logout</button>
+            <button type="submit" style="background:none;border:none;color:rgba(255,255,255,0.7);
+                    cursor:pointer;font-size:13px;padding:11px 24px;width:100%;
+                    text-align:left;border-left:3px solid transparent;">Sign Out</button>
         </form>
     </aside>
     <main class="main-content">
-        <h1 class="page-title">Reports & Analytics 📈</h1>
+        <h1 class="page-title">Reports and Analytics</h1>
 
-        <!-- Summary Stats -->
         <div class="stats-grid">
             <div class="stat-card">
                 <div class="stat-number" th:text="${allOrders.size()}">0</div>
@@ -47,7 +51,6 @@
             </div>
         </div>
 
-        <!-- All Orders Table -->
         <div class="card">
             <div class="card-title">All Orders</div>
             <table class="table">
@@ -62,10 +65,15 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="order : ${allOrders}">
-                    <td th:text="'#' + ${order.id}">#1</td>
+                <tr th:each="order,s : ${allOrders}">
+                    <td th:text="'#' + ${s.count}">#1</td>
                     <td th:text="${order.student.name}">Student</td>
-                    <td th:text="${order.items.size()} + ' item(s)'">1</td>
+                    <td>
+                            <span th:each="item,iter : ${order.items}">
+                                <span th:text="${item.name}">Item</span>
+                                <span th:unless="${iter.last}">, </span>
+                            </span>
+                    </td>
                     <td th:text="${order.totalPrice} + ' RWF'">1500</td>
                     <td th:text="'Q-' + ${order.queueNumber}">Q-1</td>
                     <td>
