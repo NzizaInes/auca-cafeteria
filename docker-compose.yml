@@ -1,0 +1,56 @@
+# =====================================================
+# AUCA Cafeteria Queue Management System
+# Docker Compose - Runs App + PostgreSQL together
+# =====================================================
+
+version: '3.8'
+
+services:
+
+  # PostgreSQL Database
+  db:
+    image: postgres:15
+    container_name: auca_cafeteria_db
+    environment:
+      POSTGRES_DB: auca_cafeteria
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: nziza
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - cafeteria_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Spring Boot Application
+  app:
+    build: .
+    container_name: auca_cafeteria_app
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/auca_cafeteria
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: nziza
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_JPA_DATABASE_PLATFORM: org.hibernate.dialect.PostgreSQLDialect
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - cafeteria_network
+    restart: on-failure
+
+# Persistent volume for database data
+volumes:
+  postgres_data:
+
+# Network for communication between containers
+networks:
+  cafeteria_network:
+    driver: bridge
