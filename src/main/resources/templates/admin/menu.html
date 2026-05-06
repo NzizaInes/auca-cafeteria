@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Manage Menu — AUCA Cafeteria</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+<nav class="navbar">
+    <a class="navbar-brand" href="#">🍽️ AUCA <span>Cafeteria</span></a>
+    <div class="navbar-user">
+        <span>⚙️ Admin</span>
+        <form th:action="@{/logout}" method="post" style="display:inline;">
+            <input type="hidden" th:name="${_csrf.parameterName}"
+                   th:value="${_csrf.token}"/>
+            <button type="submit"
+                    style="background:none;border:none;color:white;
+                           cursor:pointer;font-size:13px;">Logout</button>
+        </form>
+    </div>
+</nav>
+<div class="layout">
+    <aside class="sidebar">
+        <div class="sidebar-header">Admin Panel</div>
+        <a th:href="@{/admin/dashboard}">📊 Dashboard</a>
+        <a th:href="@{/admin/menu}" class="active">🍱 Manage Menu</a>
+        <a th:href="@{/admin/users}">👥 Manage Users</a>
+        <a th:href="@{/admin/reports}">📈 Reports</a>
+        <form th:action="@{/logout}" method="post" style="margin:0;padding:0;">
+            <input type="hidden" th:name="${_csrf.parameterName}"
+                   th:value="${_csrf.token}"/>
+            <button type="submit"
+                    style="background:none;border:none;
+                           color:rgba(255,255,255,0.75);cursor:pointer;
+                           font-size:13px;padding:12px 24px;
+                           width:100%;text-align:left;">🚪 Logout</button>
+        </form>
+    </aside>
+    <main class="main-content">
+        <h1 class="page-title">Manage Menu 🍱</h1>
+
+        <!-- Stats -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number" th:text="${menuItems.size()}">0</div>
+                <div class="stat-label">Total Items</div>
+            </div>
+            <div class="stat-card success">
+                <div class="stat-number" th:text="${availableCount}">0</div>
+                <div class="stat-label">Available</div>
+            </div>
+            <div class="stat-card danger">
+                <div class="stat-number" th:text="${unavailableCount}">0</div>
+                <div class="stat-label">Hidden</div>
+            </div>
+        </div>
+
+        <!-- Add New Item -->
+        <div class="card">
+            <div class="card-title">➕ Add New Menu Item</div>
+            <form th:action="@{/admin/menu/save}" method="post">
+                <input type="hidden" th:name="${_csrf.parameterName}"
+                       th:value="${_csrf.token}"/>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+                    <div class="form-group">
+                        <label class="form-label">Item Name *</label>
+                        <input type="text" name="name"
+                               class="form-control"
+                               placeholder="e.g. Ugali + Beans"
+                               required/>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Description</label>
+                        <input type="text" name="description"
+                               class="form-control"
+                               placeholder="Short description"/>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Price (RWF) *</label>
+                        <input type="number" name="price"
+                               class="form-control"
+                               placeholder="e.g. 500"
+                               min="0" required/>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Category *</label>
+                        <select name="category" class="form-control" required>
+                            <option value="">-- Select --</option>
+                            <option value="BREAKFAST">Breakfast</option>
+                            <option value="LUNCH">Lunch</option>
+                            <option value="DINNER">Dinner</option>
+                        </select>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary"
+                        style="margin-top:8px;">
+                    ➕ Add Menu Item
+                </button>
+            </form>
+        </div>
+
+        <!-- Menu Items Table -->
+        <div class="card">
+            <div class="card-title">All Menu Items</div>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>Category</th>
+                    <th>Price</th>
+                    <th>Available</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="item,s : ${menuItems}">
+                    <td th:text="${s.count}">1</td>
+                    <td th:text="${item.name}">Name</td>
+                    <td th:text="${item.category}">Category</td>
+                    <td th:text="${item.price} + ' RWF'">Price</td>
+                    <td>
+                            <span th:if="${item.available}"
+                                  class="badge badge-paid">YES </span>
+                        <span th:unless="${item.available}"
+                              class="badge badge-cancelled">NO </span>
+                    </td>
+                    <td>
+                        <!-- Toggle -->
+                        <form th:action="@{/admin/menu/{id}/toggle(id=${item.id})}"
+                              method="post" style="display:inline;">
+                            <input type="hidden" th:name="${_csrf.parameterName}"
+                                   th:value="${_csrf.token}"/>
+                            <button type="submit" class="btn btn-warning btn-sm">
+                                Toggle
+                            </button>
+                        </form>
+
+                        <!-- Update -->
+                        <a th:href="@{/admin/menu/{id}/edit(id=${item.id})}"
+                           class="btn btn-primary btn-sm"
+                           style="margin-left:6px;">
+                             Update
+                        </a>
+
+                        <!-- Delete -->
+                        <form th:action="@{/admin/menu/{id}/delete(id=${item.id})}"
+                              method="post" style="display:inline;margin-left:6px;"
+                              onsubmit="return confirm('Delete this item?');">
+                            <input type="hidden" th:name="${_csrf.parameterName}"
+                                   th:value="${_csrf.token}"/>
+                            <button type="submit" class="btn btn-danger btn-sm">
+                                 Delete
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+</div>
+</body>
+</html>

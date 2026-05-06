@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Manage Users — AUCA Cafeteria</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+<nav class="navbar">
+    <a class="navbar-brand" href="#">🍽️ AUCA <span>Cafeteria</span></a>
+    <div class="navbar-user">
+        <span>⚙️ Admin</span>
+        <form th:action="@{/logout}" method="post" style="display:inline;">
+            <input type="hidden" th:name="${_csrf.parameterName}"
+                   th:value="${_csrf.token}"/>
+            <button type="submit"
+                    style="background:none;border:none;color:white;
+                           cursor:pointer;font-size:13px;">Logout</button>
+        </form>
+    </div>
+</nav>
+<div class="layout">
+    <aside class="sidebar">
+        <div class="sidebar-header">Admin Panel</div>
+        <a th:href="@{/admin/dashboard}">📊 Dashboard</a>
+        <a th:href="@{/admin/menu}">🍱 Manage Menu</a>
+        <a th:href="@{/admin/users}" class="active">👥 Manage Users</a>
+        <a th:href="@{/admin/reports}">📈 Reports</a>
+        <form th:action="@{/logout}" method="post" style="margin:0;padding:0;">
+            <input type="hidden" th:name="${_csrf.parameterName}"
+                   th:value="${_csrf.token}"/>
+            <button type="submit"
+                    style="background:none;border:none;
+                           color:rgba(255,255,255,0.75);cursor:pointer;
+                           font-size:13px;padding:12px 24px;
+                           width:100%;text-align:left;">🚪 Logout</button>
+        </form>
+    </aside>
+    <main class="main-content">
+        <h1 class="page-title">Manage Users 👥</h1>
+
+        <!-- Success/Error messages -->
+        <div th:if="${param.success}" class="alert alert-success">
+            ✅ <span th:text="${param.success}">Success</span>
+        </div>
+        <div th:if="${param.error}" class="alert alert-danger">
+            ⚠️ <span th:text="${param.error}">Error</span>
+        </div>
+
+        <!-- Stats + Add Button -->
+        <div style="display:flex;justify-content:space-between;
+                    align-items:center;margin-bottom:24px;">
+            <div style="font-size:14px;color:var(--text-muted);">
+                Total users: <strong th:text="${users.size()}">0</strong>
+            </div>
+            <a th:href="@{/admin/users/add}" class="btn btn-primary">
+                ➕ Add New User
+            </a>
+        </div>
+
+        <!-- Users Table -->
+        <div class="card">
+            <div class="card-title">All Registered Users</div>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="user,s : ${users}">
+                    <td th:text="${s.count}">1</td>
+                    <td th:text="${user.name}">Name</td>
+                    <td th:text="${user.email}">Email</td>
+                    <td>
+                            <span th:if="${user.role.name() == 'STUDENT'}"
+                                  class="badge badge-paid">
+                                👤 STUDENT
+                            </span>
+                        <span th:if="${user.role.name() == 'KITCHEN_STAFF'}"
+                              class="badge badge-preparing">
+                                👨‍🍳 KITCHEN STAFF
+                            </span>
+                        <span th:if="${user.role.name() == 'CASHIER'}"
+                              class="badge badge-pending">
+                                💳 CASHIER
+                            </span>
+                        <span th:if="${user.role.name() == 'ADMIN'}"
+                              class="badge badge-cancelled">
+                                ⚙️ ADMIN
+                            </span>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+</div>
+</body>
+</html>
