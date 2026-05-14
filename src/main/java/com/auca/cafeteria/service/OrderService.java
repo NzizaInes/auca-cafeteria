@@ -118,6 +118,20 @@ public class OrderService implements OrderSubject {
         queueEntryRepository.save(entry);
         return queueNumber;
     }
+    public Order rejectPayment(Long orderId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("Order not found: " + orderId));
+        order.setStatus(OrderStatus.REJECTED);
+        order.setUpdatedAt(LocalDateTime.now());
+        order = orderRepository.save(order);
+        notifyObservers(order);
+        return order;
+    }
+    public List<Order> getActiveQueueOrders() {
+        return orderRepository.findByStatusIn(
+                List.of(OrderStatus.PAID, OrderStatus.PREPARING, OrderStatus.READY)
+        );
+    }
 
     public Order savePaymentReference(Long orderId,
                                       String paymentMethod,

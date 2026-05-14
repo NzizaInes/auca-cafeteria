@@ -24,6 +24,7 @@
         <div class="sidebar-header">Navigation</div>
         <a th:href="@{/cashier/dashboard}">Pending Payments</a>
         <a th:href="@{/cashier/confirmed}" class="active">Payment History</a>
+        <a th:href="@{/cashier/queue}">Queue Monitor</a>
         <form th:action="@{/logout}" method="post" style="margin:0;padding:0;">
             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
             <button type="submit" style="background:none;border:none;color:rgba(255,255,255,0.7);

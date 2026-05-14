@@ -35,7 +35,24 @@
     <main class="main-content">
         <h1 class="page-title">Track Your Order</h1>
 
-        <div th:if="${!#lists.isEmpty(orders)}">
+        <!-- Rejected payment alert -->
+        <div th:if="${!#lists.isEmpty(orders) and orders[0].status.name() == 'REJECTED'}"
+             style="background:#F8D7DA; border:1px solid #F5C6CB;
+                    color:#842029; border-radius:8px; padding:20px;
+                    margin-bottom:16px; font-size:14px;">
+            <strong style="font-size:16px;">❌ Payment Rejected</strong>
+            <p style="margin:8px 0 0 0;">
+                Your payment was rejected by the cashier.
+                Please visit the cashier counter to resolve this, or
+                <a th:href="@{/student/menu}"
+                   style="color:#842029; font-weight:700; text-decoration:underline;">
+                    place a new order
+                </a>.
+            </p>
+        </div>
+
+        <!-- Queue number — only show if NOT rejected -->
+        <div th:if="${!#lists.isEmpty(orders) and orders[0].status.name() != 'REJECTED'}">
             <div class="queue-number-display">
                 <div class="queue-label">Your Current Queue Number</div>
                 <div class="queue-number"
@@ -47,6 +64,7 @@
             </div>
         </div>
 
+        <!-- Order status table -->
         <div class="card">
             <div class="card-title">Order Status</div>
             <table class="table">
@@ -85,7 +103,9 @@
             </table>
         </div>
 
-        <div class="card">
+        <!-- Progress bar — only show if NOT rejected -->
+        <div class="card"
+             th:unless="${!#lists.isEmpty(orders) and orders[0].status.name() == 'REJECTED'}">
             <div class="card-title">Order Progress</div>
             <div style="display:flex;justify-content:space-between;padding:20px 0;">
 
@@ -166,7 +186,8 @@
             </div>
         </div>
 
-        <div class="alert alert-info">
+        <div class="alert alert-info"
+             th:unless="${!#lists.isEmpty(orders) and orders[0].status.name() == 'REJECTED'}">
             You will be notified automatically when your meal is ready for collection.
         </div>
 

@@ -9,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/cashier")
@@ -55,5 +56,18 @@ public class CashierController {
     public String confirmPayment(@PathVariable Long orderId) {
         orderService.updateOrderStatus(orderId, OrderStatus.PAID);
         return "redirect:/cashier/dashboard";
+    }
+    @PostMapping("/reject/{orderId}")
+    public String rejectPayment(@PathVariable Long orderId,
+                                RedirectAttributes redirectAttributes) {
+        orderService.rejectPayment(orderId);
+        redirectAttributes.addFlashAttribute("successMessage", "Payment has been rejected.");
+        return "redirect:/cashier/dashboard";
+    }
+
+    @GetMapping("/queue")
+    public String viewQueue(Model model) {
+        model.addAttribute("queueOrders", orderService.getActiveQueueOrders());
+        return "cashier/queue";
     }
 }
